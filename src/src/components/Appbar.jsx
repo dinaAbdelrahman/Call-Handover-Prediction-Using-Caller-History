@@ -23,7 +23,7 @@ export default function Appbar() {
                 <Navbar.Group align={Alignment.CENTER}>
                     <img src={logoapp} alt=""/>
                     <Navbar.Heading className={classes.heading}>
-                        NET. SIMULATOR 
+                        HNet Sim
                     </Navbar.Heading>  
                 </Navbar.Group>
             </Navbar>
