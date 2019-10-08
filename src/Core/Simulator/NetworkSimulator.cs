@@ -31,7 +31,7 @@ namespace VerticalHandoverPrediction.Simulator
 
         public List<Guid> LoadUsers()
         {
-            var history = CsvUtils._Instance.Read<CallLogMap,CallLog>($"{Environment.CurrentDirectory}/history.csv")
+            var history = CsvUtils._Instance.Read<CallLogMap,CallLog>($"{Environment.CurrentDirectory}/aa.csv")
                 .Select(x => x.UserId)
                 .Distinct();
             return history.ToList();
@@ -51,7 +51,7 @@ namespace VerticalHandoverPrediction.Simulator
 
         public PredictionResults Predict(PredictionParameters data)
         {
-            var history = CsvUtils._Instance.Read<CallLogMap,CallLog>($"{Environment.CurrentDirectory}/history.csv").ToList();
+            var history = CsvUtils._Instance.Read<CallLogMap,CallLog>($"{Environment.CurrentDirectory}/aa.csv").ToList();
             var group = history
                 .Where(x => x.UserId == Guid.Parse(data.Id))
                 .Select(x => x.SessionSequence)
@@ -59,7 +59,7 @@ namespace VerticalHandoverPrediction.Simulator
                 .Select(x => x.Skip(1).Take(2))
                 .Where(x => x.StartsWith(new List<MobileTerminalState>{data.Service.GetState()}))
                 .SelectMany(x => x.Skip(1))
-                .Where(x => x != MobileTerminalState.Idle)
+                //.Where(x => x != MobileTerminalState.Idle)
                 .GroupBy(x => x);
             
             if(!group.Any()) 

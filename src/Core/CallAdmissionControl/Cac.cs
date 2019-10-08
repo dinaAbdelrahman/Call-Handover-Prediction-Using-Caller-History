@@ -116,7 +116,7 @@ namespace VerticalHandoverPrediction.CallAdimissionControl
                     .Select(x => x.Skip(1).Take(2))
                     .Where(x => x.StartsWith(new List<MobileTerminalState>{evt.Call.Service.GetState()})                  )
                     .SelectMany(x => x.Skip(1))
-                    .Where(x => x != MobileTerminalState.Idle)
+                    //.Where(x => x != MobileTerminalState.Idle)
                     .GroupBy(x => x);
                    
                 //If group is empty it means prediction has failed

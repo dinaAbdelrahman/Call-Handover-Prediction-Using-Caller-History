@@ -60,7 +60,7 @@
                 var mobileTerminalIds = new HashSet<Guid>(history.Select(x =>x.UserId)).ToList();
                 HetNet.Instance.GenerateMobileTerminals(mobileTerminalIds);
                 
-                //NetworkSimulator.Instance.GenerateCalls(500);
+                NetworkSimulator.Instance.GenerateCalls(500);
                 
                 // foreach (var log in HetNet.Instance.MobileTerminals.SelectMany(x => x.CallLogs))
                 // {
