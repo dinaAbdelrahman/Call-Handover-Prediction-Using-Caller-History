@@ -11,8 +11,8 @@ namespace VerticalHandoverPrediction.Mobile
         Video,
         Data,
         VoiceVideo,
-        VoiceData,
         VideoData,
+        VoiceData,
         VoiceDataVideo,
     }
 }

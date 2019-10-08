@@ -131,8 +131,6 @@ namespace VerticalHandoverPrediction.CallAdimissionControl
                     var max = 0;
 
                     //If There are ties it takes the last item in the history : Fix this, what decision is made in that case
-                    
-                    //group.Dump();
 
                     foreach(var grp in group )
                     {
@@ -148,11 +146,16 @@ namespace VerticalHandoverPrediction.CallAdimissionControl
             }
 
             var services = new List<Service>{evt.Call.Service};
-            foreach (var service in nextState.SupportedServices())
-            {
-                if(!services.Contains(service)) services.Add(service);
-            }
 
+            //What if predicted state is 0 dont add zero to supported services
+            if(nextState != MobileTerminalState.Idle)
+            {
+                foreach (var service in nextState.SupportedServices())
+                {
+                    if(!services.Contains(service)) services.Add(service);
+                }
+            }
+           
             var rats = HetNet.Instance.Rats
                 .Where(x => x.Services.ToHashSet().IsSupersetOf(services))
                 .OrderBy(x => x.Services.Count)
