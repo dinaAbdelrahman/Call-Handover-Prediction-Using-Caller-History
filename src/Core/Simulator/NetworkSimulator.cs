@@ -31,7 +31,7 @@ namespace VerticalHandoverPrediction.Simulator
 
         public List<Guid> LoadUsers()
         {
-            var history = CsvUtils._Instance.Read<CallLogMap,CallLog>($"{Environment.CurrentDirectory}/aa.csv")
+            var history = CsvUtils._Instance.Read<CallLogMap,CallLog>($"{Environment.CurrentDirectory}/history.csv")
                 .Select(x => x.UserId)
                 .Distinct();
             return history.ToList();
@@ -51,7 +51,7 @@ namespace VerticalHandoverPrediction.Simulator
 
         public PredictionResults Predict(PredictionParameters data)
         {
-            var history = CsvUtils._Instance.Read<CallLogMap,CallLog>($"{Environment.CurrentDirectory}/aa.csv").ToList();
+            var history = CsvUtils._Instance.Read<CallLogMap,CallLog>($"{Environment.CurrentDirectory}/history.csv").ToList();
             var group = history
                 .Where(x => x.UserId == Guid.Parse(data.Id))
                 .Select(x => x.SessionSequence)

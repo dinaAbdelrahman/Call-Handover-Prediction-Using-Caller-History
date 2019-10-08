@@ -53,7 +53,7 @@
                 HetNet.Instance.GenerateRats((int)request.Capacity.c1, (int)request.Capacity.c2, (int)request.Capacity.c3, (int)request.Capacity.c4);
                 
                 //Load Callhistory
-                var history = CsvUtils._Instance.Read<CallLogMap,CallLog>($"{Environment.CurrentDirectory}/clean.csv");
+                var history = CsvUtils._Instance.Read<CallLogMap,CallLog>($"{Environment.CurrentDirectory}/history.csv");
                 HetNet.Instance.CallerHistory.AddRange(history);
                 
                 //Generate MobileTerminals
