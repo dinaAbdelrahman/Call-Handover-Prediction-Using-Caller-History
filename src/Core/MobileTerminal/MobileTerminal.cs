@@ -17,9 +17,9 @@ namespace VerticalHandoverPrediction.Mobile
         public IReadOnlyCollection<CallLog> CallLogs => _callLogs;
         public bool IsActive { get; private set; }
 
-        public MobileTerminal()
+        public MobileTerminal(Guid mobileTerminalId)
         {
-            MobileTerminalId = Guid.NewGuid();
+            MobileTerminalId =  mobileTerminalId;
             _callLogs = new List<CallLog>();
             State = MobileTerminalState.Idle;
             IsActive = false;

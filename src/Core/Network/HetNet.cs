@@ -30,7 +30,7 @@ namespace VerticalHandoverPrediction.Network
         public int DataCallsGenerated { get; set; }
         public int DataHandovers { get; set; }
         public int TotalSessions { get; set; }
-        public IList<CallLog> CallerHistory { get; set; }
+        public List<CallLog> CallerHistory { get; set; }
        
         private HetNet()
         {
@@ -38,11 +38,6 @@ namespace VerticalHandoverPrediction.Network
             _rats = new List<IRat>();
             _mobileTerminals = new List<IMobileTerminal>();
             CallerHistory = new List<CallLog>();
-        }
-
-        public void LoadHistory()
-        {
-            CallerHistory = CsvUtils._Instance.Read<CallLogMap,CallLog>($"{Environment.CurrentDirectory}/calllogs.csv").ToList();
         }
 
         public static HetNet Instance
@@ -168,10 +163,12 @@ namespace VerticalHandoverPrediction.Network
             BlockedCalls++;
         }
 
-        public void GenerateMobileTerminals(int numOfUsers)
+        public void GenerateMobileTerminals(List<Guid> ids)
         {  
-            for (int i = 0; i < numOfUsers; i++)
-                _mobileTerminals.Add(new MobileTerminal());
+           foreach (var id in ids)
+           {
+                _mobileTerminals.Add(new MobileTerminal(id));  
+           }
         }
 
         public void GenerateRats(int c1, int c2, int c3, int c4)

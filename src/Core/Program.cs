@@ -4,12 +4,13 @@
     using Serilog;
     using VerticalHandoverPrediction.Simulator;
     using System;
-    using VerticalHandoverPrediction.Mobile;
     using System.Linq;
     using ElectronCgi.DotNet;
     using System.Collections.Generic;
     using Electron;
     using VerticalHandoverPrediction.CallSession;
+    using VerticalHandoverPrediction.Utils;
+    using VerticalHandoverPrediction.Mobile;
 
     class Program
     {
@@ -23,13 +24,6 @@
             var connection = new ConnectionBuilder()
                 .WithLogging()
                 .Build();
-
-            // var result = NetworkSimulator.Instance.Predict(new PredictionParameters{
-            //     Service = CallSession.Service.Data,
-            //     MobileTerminalId = Guid.Parse("9e89f07c-ac04-4e0e-b113-fe418996b5cc")
-            // });
-
-            // result.Dump();
 
             connection.On<dynamic, List<Guid>>("getusers", request => {
                 return NetworkSimulator.Instance.LoadUsers();
@@ -55,19 +49,27 @@
 
             connection.On<SimulationParameters,dynamic>("results", request => {
                 
+                //Initialize settings
                 HetNet.Instance.GenerateRats((int)request.Capacity.c1, (int)request.Capacity.c2, (int)request.Capacity.c3, (int)request.Capacity.c4);
-                HetNet.Instance.GenerateMobileTerminals(20);
                 
-                NetworkSimulator.Instance.GenerateCalls(500);
+                //Load Callhistory
+                var history = CsvUtils._Instance.Read<CallLogMap,CallLog>($"{Environment.CurrentDirectory}/clean.csv");
+                HetNet.Instance.CallerHistory.AddRange(history);
                 
-                foreach (var log in HetNet.Instance.MobileTerminals.SelectMany(x => x.CallLogs))
-                {
-                    // Utils.CsvUtils._Instance.Write<CallLogMap, CallLog>(
-                    //     log, 
-                    //     $"{Environment.CurrentDirectory}/calllogs.csv");
-                    //load history in memory    
-                    HetNet.Instance.CallerHistory.Add(log);
-                }
+                //Generate MobileTerminals
+                var mobileTerminalIds = new HashSet<Guid>(history.Select(x =>x.UserId)).ToList();
+                HetNet.Instance.GenerateMobileTerminals(mobileTerminalIds);
+                
+                //NetworkSimulator.Instance.GenerateCalls(500);
+                
+                // foreach (var log in HetNet.Instance.MobileTerminals.SelectMany(x => x.CallLogs))
+                // {
+                //     // Utils.CsvUtils._Instance.Write<CallLogMap, CallLog>(
+                //     //     log, 
+                //     //     $"{Environment.CurrentDirectory}/calllogs.csv");
+                //     //load history in memory    
+                //     HetNet.Instance.CallerHistory.Add(log);
+                // }
 
                 NetworkSimulator.Instance.Events.Clear();
 
